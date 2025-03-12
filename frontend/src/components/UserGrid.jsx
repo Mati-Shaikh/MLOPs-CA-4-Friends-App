@@ -1,11 +1,12 @@
-import { Flex, Grid, Spinner, Text } from "@chakra-ui/react";
-
+import { Flex, Grid, Spinner, Text, useColorModeValue, Fade, ScaleFade } from "@chakra-ui/react";
 import UserCard from "./UserCard";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../App";
+import { motion } from "framer-motion";
 
 const UserGrid = ({ users, setUsers }) => {
 	const [isLoading, setIsLoading] = useState(true);
+	const emptyStateColor = useColorModeValue("gray.600", "gray.300");
 
 	useEffect(() => {
 		const getUsers = async () => {
@@ -26,38 +27,49 @@ const UserGrid = ({ users, setUsers }) => {
 		getUsers();
 	}, [setUsers]);
 
-	console.log(users);
 	return (
 		<>
-			<Grid
-				templateColumns={{
-					base: "1fr",
-					md: "repeat(2, 1fr)",
-					lg: "repeat(3, 1fr)",
-				}}
-				gap={4}
-			>
-				{users.map((user) => (
-					<UserCard key={user.id} user={user} setUsers={setUsers} />
-				))}
-			</Grid>
-
-			{isLoading && (
-				<Flex justifyContent={"center"}>
-					<Spinner size={"xl"} />
+			{isLoading ? (
+				<Flex justifyContent={"center"} alignItems={"center"} minH={"200px"}>
+					<Spinner size={"xl"} thickness="4px" speed="0.65s" />
 				</Flex>
-			)}
-			{!isLoading && users.length === 0 && (
-				<Flex justifyContent={"center"}>
-					<Text fontSize={"xl"}>
-						<Text as={"span"} fontSize={"2xl"} fontWeight={"bold"} mr={2}>
-							Poor you! 🥺
+			) : users.length === 0 ? (
+				<ScaleFade in={true} initialScale={0.9}>
+					<Flex
+						justifyContent={"center"}
+						alignItems={"center"}
+						minH={"200px"}
+						direction={"column"}
+						gap={3}
+					>
+						<Text fontSize={"2xl"} fontWeight={"bold"} color={emptyStateColor}>
+							😢 Poor you!
 						</Text>
-						No friends found.
-					</Text>
-				</Flex>
+						<Text fontSize={"xl"} color={emptyStateColor}>
+							No friends found.
+						</Text>
+					</Flex>
+				</ScaleFade>
+			) : (
+				<Grid
+					templateColumns={{
+						base: "1fr",
+						md: "repeat(2, 1fr)",
+						lg: "repeat(3, 1fr)",
+					}}
+					gap={6}
+					as={motion.div}
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 0.5 }}
+				>
+					{users.map((user) => (
+						<UserCard key={user.id} user={user} setUsers={setUsers} />
+					))}
+				</Grid>
 			)}
 		</>
 	);
 };
+
 export default UserGrid;

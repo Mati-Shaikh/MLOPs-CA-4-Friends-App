@@ -16,9 +16,11 @@ import {
 	Textarea,
 	useDisclosure,
 	useToast,
+	IconButton,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
+import { FaUserPlus, FaUserTie, FaIdCard, FaInfoCircle, FaVenusMars } from "react-icons/fa";
 import { BASE_URL } from "../App";
 
 const CreateUserModal = ({ setUsers }) => {
@@ -79,42 +81,57 @@ const CreateUserModal = ({ setUsers }) => {
 
 	return (
 		<>
-			<Button onClick={onOpen}>
-				<BiAddToQueue size={20} />
-			</Button>
+			<IconButton
+				onClick={onOpen}
+				aria-label="Add Friend"
+				icon={<BiAddToQueue size={20} />}
+				colorScheme="teal"
+				variant="solid"
+			/>
 
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<form onSubmit={handleCreateUser}>
 					<ModalContent>
-						<ModalHeader> My new BFF 😍 </ModalHeader>
+						<ModalHeader display="flex" alignItems="center" gap={2}>
+							<FaUserPlus size={24} />
+							Add New Friend
+						</ModalHeader>
 						<ModalCloseButton />
 
 						<ModalBody pb={6}>
-							<Flex alignItems={"center"} gap={4}>
-								{/* Left */}
-								<FormControl>
-									<FormLabel>Full Name</FormLabel>
-									<Input
-										placeholder='John Doe'
-										value={inputs.name}
-										onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
-									/>
-								</FormControl>
+							{/* Name Field */}
+							<FormControl>
+								<FormLabel display="flex" alignItems="center" gap={2}>
+									<FaIdCard />
+									Full Name
+								</FormLabel>
+								<Input
+									placeholder='John Doe'
+									value={inputs.name}
+									onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
+								/>
+							</FormControl>
 
-								{/* Right */}
-								<FormControl>
-									<FormLabel>Role</FormLabel>
-									<Input
-										placeholder='Software Engineer'
-										value={inputs.role}
-										onChange={(e) => setInputs({ ...inputs, role: e.target.value })}
-									/>
-								</FormControl>
-							</Flex>
-
+							{/* Role Field */}
 							<FormControl mt={4}>
-								<FormLabel>Description</FormLabel>
+								<FormLabel display="flex" alignItems="center" gap={2}>
+									<FaUserTie />
+									Role
+								</FormLabel>
+								<Input
+									placeholder='Software Engineer'
+									value={inputs.role}
+									onChange={(e) => setInputs({ ...inputs, role: e.target.value })}
+								/>
+							</FormControl>
+
+							{/* Description Field */}
+							<FormControl mt={4}>
+								<FormLabel display="flex" alignItems="center" gap={2}>
+									<FaInfoCircle />
+									Description
+								</FormLabel>
 								<Textarea
 									resize={"none"}
 									overflowY={"hidden"}
@@ -124,26 +141,26 @@ const CreateUserModal = ({ setUsers }) => {
 								/>
 							</FormControl>
 
-							<RadioGroup mt={4}>
-								<Flex gap={5}>
-									<Radio
-										value='male'
-										onChange={(e) => setInputs({ ...inputs, gender: e.target.value })}
-									>
-										Male
-									</Radio>
-									<Radio
-										value='female'
-										onChange={(e) => setInputs({ ...inputs, gender: e.target.value })}
-									>
-										Female
-									</Radio>
-								</Flex>
-							</RadioGroup>
+							{/* Gender Field */}
+							<FormControl mt={4}>
+								<FormLabel display="flex" alignItems="center" gap={2}>
+									<FaVenusMars />
+									Gender
+								</FormLabel>
+								<RadioGroup
+									value={inputs.gender}
+									onChange={(value) => setInputs({ ...inputs, gender: value })}
+								>
+									<Flex gap={5}>
+										<Radio value='male'>Male</Radio>
+										<Radio value='female'>Female</Radio>
+									</Flex>
+								</RadioGroup>
+							</FormControl>
 						</ModalBody>
 
 						<ModalFooter>
-							<Button colorScheme='blue' mr={3} type='submit' isLoading={isLoading}>
+							<Button colorScheme='teal' mr={3} type='submit' isLoading={isLoading}>
 								Add
 							</Button>
 							<Button onClick={onClose}>Cancel</Button>
@@ -154,4 +171,5 @@ const CreateUserModal = ({ setUsers }) => {
 		</>
 	);
 };
+
 export default CreateUserModal;
